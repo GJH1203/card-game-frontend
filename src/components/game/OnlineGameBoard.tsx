@@ -218,6 +218,21 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
         };
     }, [user]);
 
+    // Cleanup on component unmount
+    useEffect(() => {
+        return () => {
+            // When component unmounts, ensure we leave the match
+            if (user?.playerId) {
+                if (DEBUG) {
+                    console.log('OnlineGameBoard unmounting, cleaning up...');
+                }
+                // Call leave matches in background, don't wait for it
+                onlineGameService.leaveAllMatches(user.playerId).catch(err => {
+                    console.error('Error leaving matches on unmount:', err);
+                });
+            }
+        };
+    }, [user?.playerId]);
 
     // Track if match has been initialized
     const [matchInitialized, setMatchInitialized] = useState(false);
@@ -358,15 +373,25 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
 
     const handleCancelMatch = useCallback(async () => {
         if (matchInfo && user) {
+            // First disconnect WebSocket
             gameWebSocketService.leaveMatch();
+            
+            // If game is completed, we need to ensure proper cleanup
+            if (gameState?.state === 'COMPLETED') {
+                if (DEBUG) {
+                    console.log('Leaving completed game, ensuring proper cleanup');
+                }
+            }
+            
             try {
+                // Always try to leave all matches to ensure clean state
                 await onlineGameService.leaveAllMatches(user.playerId);
             } catch (err) {
                 console.error('Error leaving matches:', err);
             }
         }
         onBack();
-    }, [onBack, matchInfo, user]);
+    }, [onBack, matchInfo, user, gameState?.state]);
 
     // Update board cards display
     const updateBoardCards = (state: GameState) => {

@@ -26,7 +26,7 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
     if (user?.playerId) {
       checkForActiveGame();
     }
-  }, [user]);
+  }, [user?.playerId]);
 
   const checkForActiveGame = async () => {
     if (!user?.playerId) return;
