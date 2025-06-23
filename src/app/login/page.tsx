@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert } from '@/components/ui/alert';
@@ -259,9 +260,11 @@ export default function UnifiedAuthPage() {
         <div className="text-center mb-8">
           <div className="mx-auto w-32 h-32 bg-gradient-to-br from-purple-600 via-purple-500 to-blue-600 rounded-full p-1 mb-4 shadow-2xl shadow-purple-600/50">
             <div className="w-full h-full rounded-full overflow-hidden">
-              <img 
+              <Image 
                 src="/images/hand-of-fate-logo.png" 
                 alt="Hand of Fate Logo" 
+                width={128}
+                height={128}
                 className="w-full h-full object-cover"
               />
             </div>

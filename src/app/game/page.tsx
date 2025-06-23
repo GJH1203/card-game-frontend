@@ -18,8 +18,8 @@ export default function GamePage() {
 
     // If no mode selected, show mode selection
     if (!selectedMode) {
-        // Add a key to force re-mount when returning from a game
-        return <GameModeSelection key={Date.now()} onModeSelect={handleModeSelect} />;
+        // Add a stable key to avoid unnecessary remounts
+        return <GameModeSelection key="mode-selection" onModeSelect={handleModeSelect} />;
     }
 
     // For local mode, use existing GameBoard

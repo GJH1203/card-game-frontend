@@ -221,7 +221,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
     // Cleanup on component unmount
     useEffect(() => {
         return () => {
-            // When component unmounts, ensure we leave the match
+            // When component unmounts, ensure we leave the match and disconnect WebSocket
             if (user?.playerId) {
                 if (DEBUG) {
                     console.log('OnlineGameBoard unmounting, cleaning up...');
@@ -230,6 +230,8 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
                 onlineGameService.leaveAllMatches(user.playerId).catch(err => {
                     console.error('Error leaving matches on unmount:', err);
                 });
+                // Disconnect WebSocket to avoid orphaned connections
+                gameWebSocketService.disconnect();
             }
         };
     }, [user?.playerId]);
@@ -777,6 +779,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
                             {gameState.state === 'IN_PROGRESS' && (
                             <div className="flex gap-2 mt-4">
                                 <button
+                                    type="button"
                                     onClick={handlePass}
                                     disabled={!isMyTurn}
                                     className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group bg-gradient-to-br from-purple-800/80 via-purple-700/80 to-purple-900/80 hover:from-purple-700/90 hover:via-purple-600/90 hover:to-purple-800/90 text-purple-100 border border-purple-500/50 shadow-lg shadow-purple-900/50"
@@ -787,6 +790,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
                                 
                                 {isMyTurn && !gameState.hasPendingWinRequest && (
                                     <button
+                                        type="button"
                                         onClick={handleWinRequest}
                                         disabled={!isMyTurn}
                                         className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group bg-gradient-to-br from-amber-700/80 via-amber-600/80 to-orange-700/80 hover:from-amber-600/90 hover:via-amber-500/90 hover:to-orange-600/90 text-amber-100 border border-amber-500/50 shadow-lg shadow-amber-900/50"
@@ -809,6 +813,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
                                         </Alert>
                                         <div className="flex gap-2">
                                             <button
+                                                type="button"
                                                 onClick={() => handleWinResponse(true)}
                                                 className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 relative overflow-hidden group bg-gradient-to-br from-emerald-700/80 via-emerald-600/80 to-green-700/80 hover:from-emerald-600/90 hover:via-emerald-500/90 hover:to-green-600/90 text-emerald-100 border border-emerald-500/50 shadow-lg shadow-emerald-900/50"
                                             >
@@ -816,6 +821,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
                                                 <div className="absolute inset-0 bg-gradient-to-t from-transparent via-emerald-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                             </button>
                                             <button
+                                                type="button"
                                                 onClick={() => handleWinResponse(false)}
                                                 className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 relative overflow-hidden group bg-gradient-to-br from-gray-700/80 via-gray-600/80 to-gray-800/80 hover:from-gray-600/90 hover:via-gray-500/90 hover:to-gray-700/90 text-gray-100 border border-gray-500/50 shadow-lg shadow-gray-900/50"
                                             >
