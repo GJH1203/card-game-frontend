@@ -20,6 +20,8 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
   const [activeGame, setActiveGame] = useState<ActiveGame | null>(null);
   const [checkingActiveGame, setCheckingActiveGame] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<'create' | 'join'>('create');
+  const [pendingJoinCode, setPendingJoinCode] = useState('');
 
   // Check for active games when component mounts
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
   const handleOnlineMode = () => {
     // If user has active game, show confirmation
     if (activeGame) {
+      setConfirmAction('create');
       setShowConfirmDialog(true);
     } else {
       onModeSelect(GameMode.ONLINE);
@@ -60,7 +63,12 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
   const handleConfirmNewGame = () => {
     setShowConfirmDialog(false);
     setActiveGame(null); // Clear activeGame to avoid stale state
-    onModeSelect(GameMode.ONLINE);
+    
+    if (confirmAction === 'create') {
+      onModeSelect(GameMode.ONLINE);
+    } else if (confirmAction === 'join' && pendingJoinCode) {
+      onModeSelect(GameMode.ONLINE, pendingJoinCode);
+    }
   };
 
   const handleReconnect = () => {
@@ -78,7 +86,14 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
 
   const handleJoinGame = () => {
     if (matchId.trim()) {
-      onModeSelect(GameMode.ONLINE, matchId.trim());
+      // If user has active game, show confirmation
+      if (activeGame) {
+        setConfirmAction('join');
+        setPendingJoinCode(matchId.trim());
+        setShowConfirmDialog(true);
+      } else {
+        onModeSelect(GameMode.ONLINE, matchId.trim());
+      }
     }
   };
 
@@ -106,6 +121,40 @@ export default function GameModeSelection({ onModeSelect }: GameModeSelectionPro
         {/* Mystical orb effects */}
         <div className="absolute top-40 right-40 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-40 left-40 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        
+        {/* Confirmation Dialog */}
+        {showConfirmDialog && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center">
+            <Card className="w-full max-w-md bg-gradient-to-br from-purple-800/90 to-blue-800/90 backdrop-blur-md border-purple-500/50 shadow-2xl">
+              <CardHeader className="border-b border-purple-500/30">
+                <CardTitle className="text-xl text-yellow-400">Active Battle Detected</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 p-6">
+                <Alert className="border-yellow-500/50 bg-yellow-500/10">
+                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                  <AlertDescription className="text-gray-200">
+                    You have an ongoing battle. Joining a new game will abandon your current match.
+                  </AlertDescription>
+                </Alert>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1 bg-gray-800/40 hover:bg-gray-700/50 border-gray-600/50 text-gray-200 hover:text-white transition-all duration-300"
+                    onClick={() => setShowConfirmDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+                    onClick={handleConfirmNewGame}
+                  >
+                    Abandon & Join
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
         
         <Card className="w-full max-w-md relative z-10 bg-gradient-to-br from-purple-800/60 to-blue-800/60 backdrop-blur-md border-purple-500/50 shadow-2xl">
           <CardHeader className="border-b border-purple-500/30">
