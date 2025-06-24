@@ -378,13 +378,6 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
             // First disconnect WebSocket
             gameWebSocketService.leaveMatch();
             
-            // If game is completed, we need to ensure proper cleanup
-            if (gameState?.state === 'COMPLETED') {
-                if (DEBUG) {
-                    console.log('Leaving completed game, ensuring proper cleanup');
-                }
-            }
-            
             try {
                 // Always try to leave all matches to ensure clean state
                 await onlineGameService.leaveAllMatches(user.playerId);

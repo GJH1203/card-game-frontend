@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert } from '@/components/ui/alert';
 import { unifiedAuthService } from '@/services/unifiedAuthService';
@@ -182,7 +181,7 @@ export default function UnifiedAuthPage() {
         <Card className="w-full max-w-md bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl relative z-10">
           <CardHeader className="text-center">
             <div className="mx-auto w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center mb-4">
-              <Mail className="w-10 h-10 text-white" />
+              <Mail className="w-10 h-10 text-white" aria-hidden="true" />
             </div>
             <CardTitle className="text-2xl font-bold text-purple-100">Mystical Verification Required</CardTitle>
             <CardDescription className="text-purple-300/80">
@@ -293,7 +292,7 @@ export default function UnifiedAuthPage() {
               {isSignUp && (
                 <div className="relative">
                   <label htmlFor="username" className="block text-sm font-medium mb-2 text-purple-200">
-                    <User className="inline w-4 h-4 mr-1" />
+                    <User className="inline w-4 h-4 mr-1" aria-hidden="true" />
                     Username
                   </label>
                   <div className="relative">
@@ -313,7 +312,7 @@ export default function UnifiedAuthPage() {
 
               <div className="relative">
                 <label htmlFor="email" className="block text-sm font-medium mb-2 text-purple-200">
-                  <Mail className="inline w-4 h-4 mr-1" />
+                  <Mail className="inline w-4 h-4 mr-1" aria-hidden="true" />
                   Email
                 </label>
                 <div className="relative">
@@ -331,7 +330,7 @@ export default function UnifiedAuthPage() {
 
               <div className="relative">
                 <label htmlFor="password" className="block text-sm font-medium mb-2 text-purple-200">
-                  <Lock className="inline w-4 h-4 mr-1" />
+                  <Lock className="inline w-4 h-4 mr-1" aria-hidden="true" />
                   Password
                 </label>
                 <div className="relative">
@@ -347,7 +346,7 @@ export default function UnifiedAuthPage() {
                 </div>
                 {isSignUp && (
                   <p className="text-xs text-purple-300/60 mt-2 flex items-center">
-                    <Shield className="w-3 h-3 mr-1" />
+                    <Shield className="w-3 h-3 mr-1" aria-hidden="true" />
                     Must be at least 6 characters
                   </p>
                 )}
@@ -371,7 +370,7 @@ export default function UnifiedAuthPage() {
                 className="w-full px-6 py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group bg-gradient-to-br from-purple-600 via-purple-500 to-blue-600 hover:from-purple-500 hover:via-purple-400 hover:to-blue-500 text-white shadow-lg shadow-purple-900/50 transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-5 h-5" aria-hidden="true" />
                   {isLoading 
                     ? (isSignUp ? 'Forging Your Destiny...' : 'Opening Portal...')
                     : (isSignUp ? 'Forge Your Destiny' : 'Enter the Realm')
