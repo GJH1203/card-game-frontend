@@ -386,7 +386,7 @@ export default function OnlineGameBoard({ matchId, onBack }: OnlineGameBoardProp
             }
         }
         onBack();
-    }, [onBack, matchInfo, user, gameState?.state]);
+    }, [onBack, matchInfo, user]);
 
     // Update board cards display
     const updateBoardCards = (state: GameState) => {
